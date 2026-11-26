@@ -20,9 +20,18 @@ JOKE = (
 
 
 def main() -> None:
+    # Guard the gate before writing: the entry must be 1-200 characters
+    # of real text, never blank. Fail loudly here instead of shipping
+    # a file the sealed scorer would refuse.
+    stripped = JOKE.strip()
+    if not stripped or len(JOKE) > 200:
+        raise SystemExit(
+            f"joke is {len(JOKE)} characters; must be 1-200, non-blank"
+        )
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as handle:
         handle.write(JOKE)
+    print(f"wrote {len(JOKE)} characters to /output/entry.txt")
 
 
 if __name__ == "__main__":
